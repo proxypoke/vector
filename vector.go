@@ -77,3 +77,12 @@ func (v Vector) Scale(x float64) Vector {
 	}
 	return v
 }
+
+// Normalize the Vector (length == 1). In-place.
+func (v Vector) Normalize() Vector {
+	l := v.Len()
+	for i := range v.dims {
+		v.dims[i] /= l
+	}
+	return v
+}
