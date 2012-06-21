@@ -8,12 +8,17 @@
 
 package vector
 
-import (
-	"strconv"
-)
+func Map(f func(float64) float64, seq []float64) (newseq []float64) {
+	for _, val := range seq {
+		newseq = append(newseq, f(val))
+	}
+	return
+}
 
-type IndexError int
-
-func (e IndexError) Error() string {
-	return "Index out of range: " + strconv.Itoa(int(e))
+func Reduce(f func(float64, float64) float64, seq []float64) (result float64) {
+	result = f(seq[0], seq[1])
+	for n := 2; n < len(seq); n++ {
+		result = f(result, seq[n])
+	}
+	return
 }
