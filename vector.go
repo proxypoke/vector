@@ -32,6 +32,11 @@ func NewFrom(dims []float64) (v Vector) {
 	return
 }
 
+// Make a deep copy of the Vector.
+func (v Vector) Copy() Vector {
+	return NewFrom(v.dims)
+}
+
 // Get the dimension of the Vector.
 func (v Vector) Dim() uint {
 	return v.ndim
@@ -87,10 +92,10 @@ func (v Vector) Normalize() Vector {
 	return v
 }
 
-// Dot-product of the Vector with another Vector.
-func (v Vector) DotProduct(other Vector) (dot float64) {
-	for i := range v.dims {
-		dot += v.dims[i] * other.dims[i]
+// Dot-product of two Vectors.
+func DotProduct(A, B Vector) (dot float64) {
+	for i := range A.dims {
+		dot += A.dims[i] * B.dims[i]
 	}
 	return
 }
