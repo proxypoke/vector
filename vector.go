@@ -18,6 +18,8 @@ type Vector struct {
 	ndim uint      // the dimension of the vector
 }
 
+// ============================= [ Constructors ] =============================
+
 // Create a Vector with dimension n, with all values initialized to 0.
 func New(n uint) (v Vector) {
 	v.dims = make([]float64, n)
@@ -36,6 +38,8 @@ func NewFrom(dims []float64) (v Vector) {
 func (v Vector) Copy() Vector {
 	return NewFrom(v.dims)
 }
+
+// =========================== [ General Methods ] ============================
 
 // Get the dimension of the Vector.
 func (v Vector) Dim() uint {
@@ -58,6 +62,8 @@ func (v Vector) Len() (result float64) {
 	}
 	return math.Sqrt(result)
 }
+
+// ========================= [ In-place operations ] ==========================
 
 // Add another Vector, in-place.
 func (v Vector) Add(other Vector) Vector {
@@ -91,6 +97,8 @@ func (v Vector) Normalize() Vector {
 	}
 	return v
 }
+
+// ============================== [ Functions ] ===============================
 
 // Dot-product of two Vectors.
 func DotProduct(A, B Vector) (dot float64) {
