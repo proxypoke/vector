@@ -86,3 +86,11 @@ func (v Vector) Normalize() Vector {
 	}
 	return v
 }
+
+// Dot-product of the Vector with another Vector.
+func (v Vector) DotProduct(other Vector) (dot float64) {
+	for i := range v.dims {
+		dot += v.dims[i] * other.dims[i]
+	}
+	return
+}
