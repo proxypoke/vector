@@ -100,6 +100,26 @@ func (v Vector) Normalize() Vector {
 
 // ============================== [ Functions ] ===============================
 
+// Add two Vectors, returning a new Vector.
+func Add(a, b Vector) Vector {
+	return a.Copy().Add(b)
+}
+
+// Substract two Vectors, returning new Vector.
+func Substract(a, b Vector) Vector {
+	return a.Copy().Substract(b)
+}
+
+// Scalar multiplication of a Vector, returning a new Vector.
+func Scale(v Vector, x float64) Vector {
+	return v.Copy().Scale(x)
+}
+
+// Normalize a vector, returning a new Vector.
+func Normalize(v Vector) Vector {
+	return v.Copy().Normalize()
+}
+
 // Dot-product of two Vectors.
 func DotProduct(A, B Vector) (dot float64) {
 	for i := range A.dims {
