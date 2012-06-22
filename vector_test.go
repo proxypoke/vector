@@ -92,6 +92,31 @@ func TestGet(t *testing.T) {
 	}
 }
 
+// Creates uninitialized vectors of various dimensions, then sets their values
+// to pseudo-random values. It then compares those values to check if they
+// were set correctly. Also verifies is Set() correctly errors on out-of-range
+// indexes.
+func TestSet(t *testing.T) {
+	var i, j uint
+	for i = 0; i < 100; i++ {
+		v := New(i)
+		for j = 0; j < i; j++ {
+			val := rand.ExpFloat64()
+			err := v.Set(j, val)
+			if err != nil {
+				t.Error("Set() errored on a correct index.")
+			}
+			if v.dims[j] != val {
+				t.Error("Set didn't correctly set a value.")
+			}
+		}
+		err := v.Set(v.Dim(), 0)
+		if err == nil {
+			t.Error("get didn't error on an out-of-range index.")
+		}
+	}
+}
+
 // Helper function, makes pseudo-random slices.
 func makeRandSlice(length uint) (randslice []float64) {
 	randslice = make([]float64, length)
