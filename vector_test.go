@@ -112,8 +112,18 @@ func TestSet(t *testing.T) {
 		}
 		err := v.Set(v.Dim(), 0)
 		if err == nil {
-			t.Error("get didn't error on an out-of-range index.")
+			t.Error("Set didn't error on an out-of-range index.")
 		}
+	}
+}
+
+// Creates a vector with known length, then compares the expected value with
+// what Len() returns.
+func TestLen(t *testing.T) {
+	v := New(1)
+	v.Set(0, 2)	// has length 2
+	if v.Len() != 2 {
+		t.Error("Len returned a wrong length")
 	}
 }
 
