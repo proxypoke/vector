@@ -49,9 +49,20 @@ func (v Vector) Dim() uint {
 // Get the value of the nth element in the Vector.
 func (v Vector) Get(n uint) (val float64, err error) {
 	if n >= v.Dim() {
-		return 0, IndexError(n)
+		err = IndexError(n)
+		return
 	}
 	val = v.dims[n]
+	return
+}
+
+// Set the value of the nth element in the Vector.
+func (v Vector) Set(n uint, x float64) (err error) {
+	if n >= v.Dim() {
+		err = IndexError(n)
+		return
+	}
+	v.dims[n] = x
 	return
 }
 
