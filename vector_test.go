@@ -70,6 +70,28 @@ func TestCopy(t *testing.T) {
 	}
 }
 
+// Creates pseudo-random vectors with various dimensions, then check if Get()
+// returns the correct values and errors on out-of-range indexes.
+func TestGet(t *testing.T) {
+	var i uint
+	for i = 0; i < 100; i++ {
+		v := makeRandomVector(i)
+		for j, val := range v.dims {
+			getval, err := v.Get(uint(j))
+			if err != nil {
+				t.Error("Get() errored on a correct index.")
+			}
+			if val != getval {
+				t.Error("Get() returned a wrong value.")
+			}
+		}
+		_, err := v.Get(v.Dim())
+		if err == nil {
+			t.Error("Get didn't error on an out-of-range index.")
+		}
+	}
+}
+
 // Helper function, makes pseudo-random slices.
 func makeRandSlice(length uint) (randslice []float64) {
 	randslice = make([]float64, length)
