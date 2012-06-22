@@ -12,8 +12,32 @@ import (
 	"strconv"
 )
 
-type IndexError int
+// For missmatched dimensions.
+type DimError struct {
+	Dim_a, Dim_b uint
+}
+
+type (
+	IndexError uint     // For out-of-range indexes.
+	CrossError DimError // For cross products where either ndim != 3.
+
+)
+
+func (e DimError) Error() string {
+	return "Missmatched dimensions: " +
+		strconv.Itoa(int(e.Dim_b)) +
+		" != " +
+		strconv.Itoa(int(e.Dim_b))
+}
 
 func (e IndexError) Error() string {
 	return "Index out of range: " + strconv.Itoa(int(e))
+}
+
+func (e CrossError) Error() string {
+	return "Invalid dimensions: " + 
+		strconv.Itoa(int(e.Dim_a)) + 
+		", " + 
+		strconv.Itoa(int(e.Dim_b)) +
+		" (must be 3)"
 }

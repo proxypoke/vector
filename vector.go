@@ -98,6 +98,22 @@ func (v Vector) Normalize() Vector {
 	return v
 }
 
+// Cross product with another vector, in-place.
+// Returns error when ndim of either vector != 3.
+func (v Vector) CrossProduct(other Vector) (Vector, error) {
+	if v.ndim != 3 || other.ndim != 3 {
+		err := CrossError{v.ndim, other.ndim}
+		return New(0), err
+	}
+	x := v.dims[1]*other.dims[2] - v.dims[2]*other.dims[1]
+	y := v.dims[2]*other.dims[0] - v.dims[0]*other.dims[2]
+	z := v.dims[0]*other.dims[1] - v.dims[1]*other.dims[0]
+	v.dims[0] = x
+	v.dims[1] = y
+	v.dims[2] = z
+	return v, nil
+}
+
 // ============================== [ Functions ] ===============================
 
 // Add two Vectors, returning a new Vector.
@@ -121,9 +137,24 @@ func Normalize(v Vector) Vector {
 }
 
 // Dot-product of two Vectors.
-func DotProduct(A, B Vector) (dot float64) {
-	for i := range A.dims {
-		dot += A.dims[i] * B.dims[i]
+func DotProduct(a, b Vector) (dot float64) {
+	for i := range a.dims {
+		dot += a.dims[i] * b.dims[i]
 	}
 	return
+}
+
+// Angle (theta) between two vectors.
+func Angle(a, b Vector) (theta float64) {
+	norm_a := Normalize(a)
+	norm_b := Normalize(b)
+	dot := DotProduct(norm_a, norm_b)
+	theta = math.Acos(dot)
+	return
+}
+
+// Cross product of two vectors.
+// Returns error when ndim of either vector != 3.
+func CrossProduct(a, b Vector) (Vector, error) {
+	return a.Copy().CrossProduct(b)
 }
