@@ -55,6 +55,21 @@ func TestNewFrom(t *testing.T) {
 	}
 }
 
+// Creates pseudo-random vectors with various dimensions, copies them and
+// verifies that the new vector is equal.
+func TestCopy(t *testing.T) {
+	var i uint
+	for i = 0; i < 100; i++ {
+		v := makeRandomVector(i)
+		w := v.Copy()
+		for j := range v.dims {
+			if v.dims[j] != w.dims[j] {
+				t.Error("Copied vector has differnt value.")
+			}
+		}
+	}
+}
+
 // Helper function, makes pseudo-random slices.
 func makeRandSlice(length uint) (randslice []float64) {
 	randslice = make([]float64, length)
@@ -62,4 +77,9 @@ func makeRandSlice(length uint) (randslice []float64) {
 		randslice[i] = rand.ExpFloat64()
 	}
 	return
+}
+
+// Helper function, make a pseudo-random Vector with dimension dim.
+func makeRandomVector(dim uint) Vector {
+	return NewFrom(makeRandSlice(dim))
 }
