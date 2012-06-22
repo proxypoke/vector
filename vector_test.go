@@ -9,6 +9,7 @@
 package vector
 
 import (
+	"math/rand"
 	"testing"
 )
 
@@ -21,7 +22,7 @@ func TestNew(t *testing.T) {
 		if v.Dim() != i {
 			t.Errorf("Wrong dimension. Got %d, expected %d.", v.Dim(), i)
 		}
-		for j = 0; j <= i; j++ {
+		for j = 0; j < i; j++ {
 			// XXX: If the Get method errors, this test will still pass. This
 			// is because Get() would then return an uninitialized float64 for
 			// val, which is 0 and therefore what the test expects.
@@ -31,4 +32,34 @@ func TestNew(t *testing.T) {
 			}
 		}
 	}
+}
+
+// Creates vectors with randomized slices, then checks whether they have the
+// correct dimension (len(slice)) and whether they have been correctly
+// initialized.
+func TestNewFrom(t *testing.T) {
+	var i, j uint
+	for i = 0; i < 100; i++ {
+		randslice := makeRandSlice(i)
+		v := NewFrom(randslice)
+		if v.Dim() != i {
+			t.Errorf("Wrong dimension. Got %d, expected %d.", v.Dim(), i)
+		}
+		for j = 0; j < i; j++ {
+			val, _ := v.Get(j)
+			if val != randslice[j] {
+				t.Error(
+					"Wrong values in vector initialized from a random slice.")
+			}
+		}
+	}
+}
+
+// Helper function, makes pseudo-random slices.
+func makeRandSlice(length uint) (randslice []float64) {
+	randslice = make([]float64, length)
+	for i := range randslice {
+		randslice[i] = rand.ExpFloat64()
+	}
+	return
 }
