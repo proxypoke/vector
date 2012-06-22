@@ -35,9 +35,9 @@ func (e IndexError) Error() string {
 }
 
 func (e CrossError) Error() string {
-	return "Invalid dimensions: " + 
-		strconv.Itoa(int(e.Dim_a)) + 
-		", " + 
+	return "Invalid dimensions: " +
+		strconv.Itoa(int(e.Dim_a)) +
+		", " +
 		strconv.Itoa(int(e.Dim_b)) +
 		" (must be 3)"
 }

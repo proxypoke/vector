@@ -77,19 +77,25 @@ func (v Vector) Len() (result float64) {
 // ========================= [ In-place operations ] ==========================
 
 // Add another Vector, in-place.
-func (v Vector) Add(other Vector) Vector {
-	for i := range v.dims {
-		v.dims[i] += other.dims[i]
+func (v Vector) Add(other Vector) (Vector, error) {
+	err := checkDims(v, other)
+	if err == nil {
+		for i := range v.dims {
+			v.dims[i] += other.dims[i]
+		}
 	}
-	return v
+	return v, err
 }
 
 // Substract another Vector, in-place.
-func (v Vector) Substract(other Vector) Vector {
-	for i := range v.dims {
-		v.dims[i] -= other.dims[i]
+func (v Vector) Substract(other Vector) (Vector, error) {
+	err := checkDims(v, other)
+	if err == nil {
+		for i := range v.dims {
+			v.dims[i] -= other.dims[i]
+		}
 	}
-	return v
+	return v, err
 }
 
 // In-place scalar multiplication.
@@ -127,13 +133,21 @@ func (v Vector) CrossProduct(other Vector) (Vector, error) {
 
 // ============================== [ Functions ] ===============================
 
+// Check if two vectors have the same dimension.
+func checkDims(a, b Vector) (err error) {
+	if a.ndim != b.ndim {
+		err = DimError{a.ndim, b.ndim}
+	}
+	return
+}
+
 // Add two Vectors, returning a new Vector.
-func Add(a, b Vector) Vector {
+func Add(a, b Vector) (Vector, error) {
 	return a.Copy().Add(b)
 }
 
 // Substract two Vectors, returning new Vector.
-func Substract(a, b Vector) Vector {
+func Substract(a, b Vector) (Vector, error) {
 	return a.Copy().Substract(b)
 }
 
@@ -148,7 +162,7 @@ func Normalize(v Vector) Vector {
 }
 
 // Dot-product of two Vectors.
-func DotProduct(a, b Vector) (dot float64) {
+func DotProduct(a, b Vector) (dot float64, err error) {
 	for i := range a.dims {
 		dot += a.dims[i] * b.dims[i]
 	}
@@ -156,11 +170,14 @@ func DotProduct(a, b Vector) (dot float64) {
 }
 
 // Angle (theta) between two vectors.
-func Angle(a, b Vector) (theta float64) {
-	norm_a := Normalize(a)
-	norm_b := Normalize(b)
-	dot := DotProduct(norm_a, norm_b)
-	theta = math.Acos(dot)
+func Angle(a, b Vector) (theta float64, err error) {
+	err = checkDims(a, b)
+	if err == nil {
+		norm_a := Normalize(a)
+		norm_b := Normalize(b)
+		dot, _ := DotProduct(norm_a, norm_b)
+		theta = math.Acos(dot)
+	}
 	return
 }
 
