@@ -121,11 +121,46 @@ func TestSet(t *testing.T) {
 // what Len() returns.
 func TestLen(t *testing.T) {
 	v := New(1)
-	v.Set(0, 2)	// has length 2
+	v.Set(0, 2) // has length 2
 	if v.Len() != 2 {
 		t.Error("Len returned a wrong length")
 	}
 }
+
+// =========================== [ Operation Tests ] ============================
+
+// Creates pesudo-random vectors, then adds them first as a non-destructive,
+// then as an in-place operations, checking if both operation were correct.
+func TestAdd(t *testing.T) {
+	var i, j uint
+	for i = 1; i < 2; i++ {
+		a := makeRandomVector(i)
+		b := makeRandomVector(i)
+		c, _ := Add(a, b)
+
+		for j = 0; j < i; j++ {
+			if c.dims[j] != a.dims[j] + b.dims[j] {
+				t.Error("Addition failed, didn't get expected values.")
+				t.Logf("%f + %f != %f", a.dims[j], b.dims[j], c.dims[j])
+			}
+		}
+
+		// Test in-place addition.
+		c = a.Copy()
+		c.Add(b)
+
+		for j = 0; j < i; j++ {
+			if c.dims[j] != a.dims[j] + b.dims[j] {
+				t.Error(
+					"In-place Addition failed, didn't get expected values.")
+				t.Logf("%f + %f != %f", a.dims[j], b.dims[j], c.dims[j])
+			}
+		}
+	}
+
+}
+
+// =========================== [ Helper Functions ] ===========================
 
 // Helper function, makes pseudo-random slices.
 func makeRandSlice(length uint) (randslice []float64) {
@@ -137,6 +172,6 @@ func makeRandSlice(length uint) (randslice []float64) {
 }
 
 // Helper function, make a pseudo-random Vector with dimension dim.
-func makeRandomVector(dim uint) Vector {
+func makeRandomVector(dim uint) *Vector {
 	return NewFrom(makeRandSlice(dim))
 }
