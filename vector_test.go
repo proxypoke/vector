@@ -13,6 +13,8 @@ import (
 	"testing"
 )
 
+// ========================== [ Constructor Tests ] ===========================
+
 // Creates vectors with dimension from 0 to 99, checks if they actually have
 // that dimension, then checks if the values are correctly initialized to 0.
 func TestNew(t *testing.T) {
@@ -62,13 +64,13 @@ func TestCopy(t *testing.T) {
 	for i = 0; i < 100; i++ {
 		v := makeRandomVector(i)
 		w := v.Copy()
-		for j := range v.dims {
-			if v.dims[j] != w.dims[j] {
-				t.Error("Copied vector has differnt value.")
-			}
+		if !Equal(v, w) {
+			t.Error("Copied vector is not equal to source vector.")
 		}
 	}
 }
+
+// =================== [ General Methods/Functions Tests ] ====================
 
 // Creates pseudo-random vectors with various dimensions, then check if Get()
 // returns the correct values and errors on out-of-range indexes.
@@ -127,6 +129,26 @@ func TestLen(t *testing.T) {
 	}
 }
 
+// Creates Vectors which are known to be (un)equal, then verifies that Equal()
+// has correct oytput.
+func TestEqual(t *testing.T) {
+	slc := make([]float64, 10)
+	for i := range slc {
+		slc[i] = float64(i)
+	}
+
+	v := NewFrom(slc)
+	w := NewFrom(slc)
+	if !Equal(v, w) {
+		t.Error("Equal() != true for equal vectors.")
+	}
+
+	w = New(10)
+	if Equal(v, w) {
+		t.Error("Equal() == true for unequal vectors.")
+	}
+}
+
 // =========================== [ Operation Tests ] ============================
 
 // Creates pesudo-random vectors, then adds them first as a non-destructive,
@@ -139,7 +161,7 @@ func TestAdd(t *testing.T) {
 		c, _ := Add(a, b)
 
 		for j = 0; j < i; j++ {
-			if c.dims[j] != a.dims[j] + b.dims[j] {
+			if c.dims[j] != a.dims[j]+b.dims[j] {
 				t.Error("Addition failed, didn't get expected values.")
 				t.Logf("%f + %f != %f", a.dims[j], b.dims[j], c.dims[j])
 			}
@@ -150,7 +172,7 @@ func TestAdd(t *testing.T) {
 		c.Add(b)
 
 		for j = 0; j < i; j++ {
-			if c.dims[j] != a.dims[j] + b.dims[j] {
+			if c.dims[j] != a.dims[j]+b.dims[j] {
 				t.Error(
 					"In-place Addition failed, didn't get expected values.")
 				t.Logf("%f + %f != %f", a.dims[j], b.dims[j], c.dims[j])

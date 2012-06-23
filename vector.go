@@ -138,6 +138,20 @@ func (v *Vector) CrossProduct(other *Vector) (*Vector, error) {
 
 // ============================== [ Functions ] ===============================
 
+// Compare two vectors. Returns true if all values are the same.
+func Equal(a, b *Vector) (equal bool) {
+	err := checkDims(a, b)
+	if err == nil {
+		equal = true
+		for i := range a.dims {
+			if a.dims[i] != b.dims[i] {
+				equal = false
+			}
+		}
+	}
+	return
+}
+
 // Add two Vectors, returning a new Vector.
 func Add(a, b *Vector) (*Vector, error) {
 	return a.Copy().Add(b)
