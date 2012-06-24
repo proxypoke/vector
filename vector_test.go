@@ -155,7 +155,7 @@ func TestEqual(t *testing.T) {
 // then as an in-place operations, checking if both operation were correct.
 func TestAdd(t *testing.T) {
 	var i, j uint
-	for i = 1; i < 2; i++ {
+	for i = 1; i < 100; i++ {
 		a := makeRandomVector(i)
 		b := makeRandomVector(i)
 		c, _ := Add(a, b)
@@ -181,10 +181,10 @@ func TestAdd(t *testing.T) {
 	}
 }
 
-// Same ad TestAdd, but with substraction. Heck, it's basically the same code.
+// Same as TestAdd, but with substraction. Heck, it's basically the same code.
 func TestSubstract(t *testing.T) {
 	var i, j uint
-	for i = 1; i < 2; i++ {
+	for i = 1; i < 100; i++ {
 		a := makeRandomVector(i)
 		b := makeRandomVector(i)
 		c, _ := Substract(a, b)
@@ -196,7 +196,7 @@ func TestSubstract(t *testing.T) {
 			}
 		}
 
-		// Test in-place addition.
+		// Test in-place sybstraction
 		c = a.Copy()
 		c.Substract(b)
 
@@ -205,6 +205,38 @@ func TestSubstract(t *testing.T) {
 				t.Error(
 					"In-place Substraction failed, didn't get expected values.")
 				t.Logf("%f - %f != %f", a.dims[j], b.dims[j], c.dims[j])
+			}
+		}
+	}
+}
+
+// Creates pseudo-random vectors, does scalar multiplication with pseudo-random
+// floats, then checks if the result is correct. It checks both the in-place
+// and the non-destructive version.
+func TestScale(t *testing.T) {
+	var i, j uint
+	for i = 0; i < 100; i++ {
+		a := makeRandomVector(i)
+		x := rand.ExpFloat64()
+		b := Scale(a, x)
+
+		for j = 0; j < i; j++ {
+			if b.dims[j] != a.dims[j]*x {
+				t.Error("Scalar Multiplication failed, ",
+					"didn't get expected values.")
+				t.Logf("%f * %f != %f", a.dims[j], x, b.dims[j])
+			}
+		}
+
+		// Test in-place scalar multiplication
+		b = a.Copy()
+		b.Scale(x)
+
+		for j = 0; j < i; j++ {
+			if b.dims[j] != a.dims[j]*x {
+				t.Error("In-place Scalar Multiplication failed, ",
+					"didn't get expected values.")
+				t.Logf("%f * %f != %f", a.dims[j], x, b.dims[j])
 			}
 		}
 	}
