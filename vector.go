@@ -77,8 +77,8 @@ func (v Vector) Len() (result float64) {
 	result = math.Sqrt(result)
 	// Account for floating point imprecison
 	// XXX: This is probably a bad solution, but it works for now.
-	epsilon := 1.00000000000000000005
-	if math.Abs(1-result) < epsilon {
+	ε := 1.00000000000000000005
+	if math.Abs(1-result) < ε {
 		result = 1
 	}
 	return
@@ -187,14 +187,14 @@ func DotProduct(a, b *Vector) (dot float64, err error) {
 	return
 }
 
-// Angle (theta) between two vectors.
-func Angle(a, b *Vector) (theta float64, err error) {
+// Angle Θ (theta) between two vectors.
+func Angle(a, b *Vector) (Θ float64, err error) {
 	err = checkDims(a, b)
 	if err == nil {
 		norm_a := Normalize(a)
 		norm_b := Normalize(b)
 		dot, _ := DotProduct(norm_a, norm_b)
-		theta = math.Acos(dot)
+		Θ = math.Acos(dot)
 	}
 	return
 }
