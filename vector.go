@@ -6,6 +6,16 @@
 // which can be found in a file called COPYING included
 // with this program or at http://sam.zoy.org/wtfpl/COPYING
 
+// Package vector implements mathematical vectors over float64 values, with
+// common operations defined on them, like addition, the scalar product or
+// normalization. 
+//
+// Operations that result in a new vector (like addition or the
+// cross product) have both an in-place and a non-destructive version, with the
+// first being a method on the Vector type and the latter being a function.
+//
+// In-place operations on vectors return the vector to make it possible to
+// chain ("pipe") operations. This is purely convenience.
 package vector
 
 import (

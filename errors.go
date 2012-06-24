@@ -18,9 +18,10 @@ type DimError struct {
 }
 
 type (
-	IndexError uint     // For out-of-range indexes.
-	CrossError DimError // For cross products where either ndim != 3.
-
+	// For out-of-range indexes.
+	IndexError uint
+	// For cross products where either ndim != 3.
+	CrossError DimError
 )
 
 func (e DimError) Error() string {
