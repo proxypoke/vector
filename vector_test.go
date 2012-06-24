@@ -242,6 +242,21 @@ func TestScale(t *testing.T) {
 	}
 }
 
+// Creates pseudo-random vectors, normalizes them both in-place and
+// non-destructive, and verifies that the result is correct.
+func TestNormalize(t *testing.T) {
+	var i uint
+	for i = 1; i < 100; i++ {
+		a := makeRandomVector(i)
+		b := Normalize(a)
+
+		if b.Len() != float64(1) {
+			t.Error("Normalization failed, vector doesn't have length 1.")
+			t.Logf("%f != 1", b.Len())
+		}
+	}
+}
+
 // =========================== [ Helper Functions ] ===========================
 
 // Helper function, makes pseudo-random slices.

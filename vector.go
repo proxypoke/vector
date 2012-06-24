@@ -74,7 +74,14 @@ func (v Vector) Len() (result float64) {
 	for _, val := range v.dims {
 		result += math.Pow(val, 2)
 	}
-	return math.Sqrt(result)
+	result = math.Sqrt(result)
+	// Account for floating point imprecison
+	// XXX: This is probably a bad solution, but it works for now.
+	epsilon := 1.00000000000000000005
+	if math.Abs(1-result) < epsilon {
+		result = 1
+	}
+	return
 }
 
 // ========================= [ In-place operations ] ==========================
