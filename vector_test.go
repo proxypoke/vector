@@ -247,6 +247,7 @@ func TestScale(t *testing.T) {
 // non-destructive, and verifies that the result is correct.
 func TestNormalize(t *testing.T) {
 	var i uint
+	// It makes no sense to normalize a zero vector, therefore we start at 1.
 	for i = 1; i < 100; i++ {
 		a := makeRandomVector(i)
 		b := Normalize(a)
@@ -319,6 +320,71 @@ func TestAngle(t *testing.T) {
 	if Θ != math.Pi {
 		t.Error("Angle between anti-parallel vectors isn't π.")
 		t.Logf("%f != %f", Θ, math.Pi)
+	}
+}
+
+// Calculates the cross product of two pseudo-random vectors, then checks if
+// the resulting vector is orthogonal to both the original vectors. Tests both
+// in-place and non-destructive versions of the operation.
+func TestCrossProduct(t *testing.T) {
+	check := func(a, b, c *Vector) {
+		dot_a, _ := DotProduct(a, c)
+		dot_b, _ := DotProduct(b, c)
+		ε := 0.0000000005
+		if math.Abs(0-dot_a) < ε {
+			dot_a = 0
+		}
+		if math.Abs(0-dot_b) < ε {
+			dot_b = 0
+		}
+		if dot_a != 0 || dot_b != 0 {
+			t.Error("Either or both vectors aren't orthogonal",
+				"to their Cross Product.")
+			t.Logf("a * c = %f", dot_a)
+			t.Logf("b * c = %f", dot_b)
+		}
+	}
+
+	a := makeRandomVector(3)
+	b := makeRandomVector(3)
+	c, _ := CrossProduct(a, b)
+
+	check(a, b, c)
+
+	// Check in-place, too.
+	c = a.Copy()
+	c.CrossProduct(b)
+
+	check(a, b, c)
+
+	// Check if vectors ∉ ℝ³ are rejected.
+	d := New(2)
+	e := New(4)
+	_, err := CrossProduct(d, e)
+	if err == nil {
+		t.Error("CrossProduct() didn't error with invalid input vectors",
+			"(∉ ℝ³)")
+	}
+}
+
+// Check whether the various functions that take more than one vector error on
+// being supplied with vectors of missmatched dimensions.
+// It suffices to check the helper function checkDims, since every function
+// must call it to verify its inputs.
+func TestMissmatchedDims(t *testing.T) {
+	a := New(2)
+	b := New(3)
+
+	err := checkDims(a, b)
+	if err == nil {
+		t.Error("Missmatched dimension check succeeded on unequal dimensions.")
+	}
+
+	a = New(4)
+	b = New(4)
+	err = checkDims(a, b)
+	if err != nil {
+		t.Error("Missmatched dimension check failed on equal dimensions.")
 	}
 }
 
