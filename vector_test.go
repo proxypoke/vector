@@ -9,6 +9,7 @@
 package vector
 
 import (
+	"math"
 	"math/rand"
 	"testing"
 )
@@ -285,6 +286,39 @@ func TestDotProduct(t *testing.T) {
 	dot, _ = DotProduct(a, b)
 	if dot != -1 {
 		t.Error("Dot Product of anti-parallel vectors isn't -1.")
+	}
+}
+
+// Uses vectors with known angles to verify that Angle() is correct.
+func TestAngle(t *testing.T) {
+	a := New(2)
+	b := New(2)
+
+	// Set the vectors as parallel (Θ == 0).
+	a.Set(0, 1)
+	b.Set(0, 1)
+	Θ, _ := Angle(a, b)
+	if Θ != 0 {
+		t.Error("Angle between parallel vectors isn't 0.")
+		t.Logf("%f != 0", Θ)
+	}
+
+	// Set the vectors as orthogonal (Θ == 0.5π).
+	b = New(2)
+	b.Set(1, 1)
+	Θ, _ = Angle(a, b)
+	if Θ != 0.5*math.Pi {
+		t.Error("Angle between orthonal vectors isn't 0.5π.")
+		t.Logf("%f != %f", Θ, 0.5*math.Pi)
+	}
+
+	// Set the vectors as anti-parallel (Θ == π).
+	b = New(2)
+	b.Set(0, -1)
+	Θ, _ = Angle(a, b)
+	if Θ != math.Pi {
+		t.Error("Angle between anti-parallel vectors isn't π.")
+		t.Logf("%f != %f", Θ, math.Pi)
 	}
 }
 
