@@ -179,7 +179,35 @@ func TestAdd(t *testing.T) {
 			}
 		}
 	}
+}
 
+// Same ad TestAdd, but with substraction. Heck, it's basically the same code.
+func TestSubstract(t *testing.T) {
+	var i, j uint
+	for i = 1; i < 2; i++ {
+		a := makeRandomVector(i)
+		b := makeRandomVector(i)
+		c, _ := Substract(a, b)
+
+		for j = 0; j < i; j++ {
+			if c.dims[j] != a.dims[j]-b.dims[j] {
+				t.Error("Substraction failed, didn't get expected values.")
+				t.Logf("%f - %f != %f", a.dims[j], b.dims[j], c.dims[j])
+			}
+		}
+
+		// Test in-place addition.
+		c = a.Copy()
+		c.Substract(b)
+
+		for j = 0; j < i; j++ {
+			if c.dims[j] != a.dims[j]-b.dims[j] {
+				t.Error(
+					"In-place Substraction failed, didn't get expected values.")
+				t.Logf("%f - %f != %f", a.dims[j], b.dims[j], c.dims[j])
+			}
+		}
+	}
 }
 
 // =========================== [ Helper Functions ] ===========================
