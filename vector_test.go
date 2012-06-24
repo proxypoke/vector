@@ -257,6 +257,37 @@ func TestNormalize(t *testing.T) {
 	}
 }
 
+// Uses vectors with known angles to calculate their DotProduct, then verifies
+// if the result is correct.
+func TestDotProduct(t *testing.T) {
+	a := New(2)
+	b := New(2)
+
+	// Set the vectors as parallel.
+	a.Set(0, 1)
+	b.Set(0, 1)
+	dot, _ := DotProduct(a, b)
+	if dot != 1 {
+		t.Error("Dot Product of parallel vectors isn't 1.")
+	}
+
+	// Set the vectors as orthogonal.
+	b = New(2)
+	b.Set(1, 1)
+	dot, _ = DotProduct(a, b)
+	if dot != 0 {
+		t.Error("Dot Product of orthogonal vectors isn't 0.")
+	}
+
+	// Set the vectors as anti-parallel.
+	b = New(2)
+	b.Set(0, -1)
+	dot, _ = DotProduct(a, b)
+	if dot != -1 {
+		t.Error("Dot Product of anti-parallel vectors isn't -1.")
+	}
+}
+
 // =========================== [ Helper Functions ] ===========================
 
 // Helper function, makes pseudo-random slices.
